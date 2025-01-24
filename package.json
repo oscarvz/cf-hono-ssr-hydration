@@ -18,5 +18,8 @@
     "@hono/vite-dev-server": "^0.17.0",
     "wrangler": "^3.83.0"
   },
-  "type": "module"
+  "type": "module",
+  "pnpm": {
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild", "workerd"]
+  }
 }
