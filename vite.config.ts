@@ -1,6 +1,7 @@
 import build from "@hono/vite-build/cloudflare-workers";
 import devServer from "@hono/vite-dev-server";
 import cloudflareAdapter from "@hono/vite-dev-server/cloudflare";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig(({ mode }) => {
@@ -19,6 +20,7 @@ export default defineConfig(({ mode }) => {
         manifest: true,
       },
       publicDir: "./src/public",
+      plugins: [react()],
     };
   }
 

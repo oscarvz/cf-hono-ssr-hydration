@@ -1,18 +1,44 @@
-import { Fragment } from "hono/jsx";
 import { Hono } from "hono";
-import { Style } from "hono/css";
-import { jsxRenderer } from "hono/jsx-renderer";
+import { reactRenderer } from "@hono/react-renderer";
+import { Children, isValidElement } from "react";
 
-import { Counter } from "./client/Counter";
-import { getAssetImportTagsFromManifest } from "./utils";
+import { Counter } from "./client/components";
+import { AssetTags } from "./utils";
 
 const web = new Hono();
 
 web.use(
   "*",
-  jsxRenderer(
+  reactRenderer(
     ({ children }) => {
-      const assetImportTags = getAssetImportTagsFromManifest();
+      const newChildren = Children.toArray(children)
+        .filter(isValidElement)
+        .map((child) => {
+          const anonymousFunction =
+            child.type.toString(); /* wonky but fine in dev */
+          const componentName =
+            anonymousFunction.match(/fileName: ".*\/(.*?)\.tsx"/)?.[1] ?? "";
+
+          if (
+            child.props &&
+            typeof child.props === "object" &&
+            Object.keys(child.props).length === 0
+          ) {
+            return child;
+          }
+
+          const props = JSON.stringify(child.props);
+
+          return [
+            <div
+              style={{ display: "contents" }}
+              key={componentName}
+              data-hydrate-name={componentName}
+              data-hydrate-props={props}
+            />,
+            child,
+          ];
+        });
 
       return (
         <html lang="en">
@@ -24,11 +50,13 @@ web.use(
             />
             <title>Wow cf-workers-hono-client-side</title>
             <link rel="icon" href="/favicon.svg" />
-            <Style />
-            {assetImportTags}
+
+            <AssetTags />
           </head>
 
-          <body>{children}</body>
+          <body>
+            <div id="root">{newChildren}</div>
+          </body>
         </html>
       );
     },
@@ -36,21 +64,6 @@ web.use(
   ),
 );
 
-// In the SSR example, we provide the root element, which contains the Counter
-// component. Counter gets rendered on the server and then hydrated on the
-// client.
-web.get("/", (c) => {
-  return c.render(
-    <div id="ssr-root" data-root>
-      <Counter />
-    </div>,
-  );
-});
-
-// In the SPA example, we provide the root element, which will be used to render
-// the Counter component on the client.
-web.get("/spa", (c) => {
-  return c.render(<div id="spa-root" data-root />);
-});
+web.get("/", (c) => c.render(<Counter score={1} />));
 
 export default web;

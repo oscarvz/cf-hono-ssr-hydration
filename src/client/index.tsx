@@ -1,25 +1,38 @@
-import { StrictMode } from "hono/jsx";
-import { createRoot, hydrateRoot } from "hono/jsx/dom/client";
+import { type ComponentProps, StrictMode, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { hydrateRoot } from "react-dom/client";
 
-import { Counter } from "./Counter";
+import * as components from "./components";
 import "./index.css";
 
-const ssrRoot = document.getElementById("ssr-root");
-if (ssrRoot) {
-  hydrateRoot(
-    ssrRoot,
-    <StrictMode>
-      <Counter />
-    </StrictMode>,
-  );
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("Root element not found");
 }
 
-const spaRoot = document.getElementById("spa-root");
-if (spaRoot) {
-  const root = createRoot(spaRoot);
-  root.render(
-    <StrictMode>
-      <Counter />
-    </StrictMode>,
-  );
+function App() {
+  const portals = useMemo(() => {
+    return Object.entries(components).flatMap(([name, Component]) => {
+      const elements = [
+        ...document.querySelectorAll(`[data-hydrate-name="${name}"]`),
+      ];
+
+      return elements.map((element) => {
+        const props: ComponentProps<typeof Component> = JSON.parse(
+          element.getAttribute("data-hydrate-props") ?? "{}",
+        );
+
+        return createPortal(<Component {...props} />, element);
+      });
+    });
+  }, []);
+
+  return portals;
 }
+
+hydrateRoot(
+  root,
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

@@ -1,12 +1,12 @@
-import type { JSX } from "hono/jsx";
+import type { ReactNode } from "react";
 import type { Manifest } from "vite";
 
 /**
- * Helper function that reads the Vite manifest and returns the import tags for
+ * Helper component that reads the Vite manifest and returns the import tags for
  * the JS/CSS assets processed by Vite.
  * Setting `build.manifest` to `true` in the Vite config is required for this.
  */
-export function getAssetImportTagsFromManifest() {
+export function AssetTags() {
   if (!import.meta.env.PROD) {
     return <script type="module" src="/src/client/index.tsx" />;
   }
@@ -21,10 +21,7 @@ export function getAssetImportTagsFromManifest() {
     return null;
   }
 
-  const importTags: Array<
-    JSX.IntrinsicElements["link"] | JSX.IntrinsicElements["script"]
-  > = [];
-
+  const importTags: ReactNode[] = [];
   for (const { file, css } of Object.values(manifest)) {
     const scriptTag = <script key={file} type="module" src={file} />;
     importTags.push(scriptTag);
@@ -37,5 +34,5 @@ export function getAssetImportTagsFromManifest() {
     }
   }
 
-  return importTags;
+  return <>{importTags}</>;
 }
