@@ -1,4 +1,4 @@
-name = "cf-workers-hono-client-side"
+name = "cf-hono-ssr-hydration"
 main = "dist/index.js"
 compatibility_date = "2024-11-19"
 
