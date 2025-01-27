@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { reactRenderer } from "@hono/react-renderer";
 import { Children, isValidElement, type ReactElement } from "react";
 
-import { Counter } from "./client/components";
+import { Counter, Thing } from "./client/components";
 import { AssetTags } from "./utils";
 
 const web = new Hono();
@@ -19,7 +19,7 @@ web.use(
             const anonFn = child.type.toString(); /* wonky but fine in dev */
             const cName = anonFn.match(/fileName: ".*\/(.*?)\.tsx"/)?.[1] ?? "";
 
-            if (cName && child.props) {
+            if (cName) {
               console.log("hi got to the cName", cName);
 
               const props = JSON.stringify(child.props);
@@ -30,8 +30,9 @@ web.use(
                   key={cName}
                   data-hydrate-name={cName}
                   data-hydrate-props={props}
-                />,
-                child,
+                >
+                  {child}
+                </div>,
               ];
             }
 
@@ -74,18 +75,16 @@ web.use(
   ),
 );
 
-web.get(
-  "/",
-  // (c) => c.render(<Counter score={1} />),
-  (c) =>
-    c.render(
-      <div>
-        <h1>
-          <p>hellllllo</p>
-        </h1>
-        <Counter score={1} />
-      </div>,
-    ),
+web.get("/", (c) =>
+  c.render(
+    <div>
+      <Thing />
+      <h1>
+        <p>hellllllo</p>
+      </h1>
+      <Counter score={1} />
+    </div>,
+  ),
 );
 
 export default web;

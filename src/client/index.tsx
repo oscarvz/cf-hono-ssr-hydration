@@ -1,38 +1,25 @@
 import { type ComponentProps, StrictMode, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { hydrateRoot } from "react-dom/client";
+import { hydrateRoot, createRoot } from "react-dom/client";
 
 import * as components from "./components";
 import "./index.css";
 
-const root = document.getElementById("root");
-if (!root) {
+const rootElement = document.getElementById("root");
+if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-function App() {
-  const portals = useMemo(() => {
-    return Object.entries(components).flatMap(([name, Component]) => {
-      const elements = [
-        ...document.querySelectorAll(`[data-hydrate-name="${name}"]`),
-      ];
+Object.entries(components).map(([name, Component]) => {
+  const element = document.querySelector(`[data-hydrate-name="${name}"]`);
+  if (!element) {
+    return null;
+  }
 
-      return elements.map((element) => {
-        const props: ComponentProps<typeof Component> = JSON.parse(
-          element.getAttribute("data-hydrate-props") ?? "{}",
-        );
+  const props: ComponentProps<typeof Component> = JSON.parse(
+    element.getAttribute("data-hydrate-props") ?? "{}",
+  );
 
-        return createPortal(<Component {...props} />, element);
-      });
-    });
-  }, []);
-
-  return portals;
-}
-
-hydrateRoot(
-  root,
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+  // @ts-expect-error - requires props mapping for different components
+  hydrateRoot(element, createPortal(<Component {...props} />, element));
+});
