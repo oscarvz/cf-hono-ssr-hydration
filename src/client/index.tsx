@@ -2,7 +2,10 @@ import type { ComponentProps } from "react";
 import { createPortal } from "react-dom";
 import { hydrateRoot } from "react-dom/client";
 
+import type * as components from "./components";
 import "./index.css";
+
+type AllComponents = typeof components;
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -10,15 +13,15 @@ if (!rootElement) {
 }
 
 const globImports: Record<string, Record<string, React.FC>> = import.meta.glob(
-  "./**/*.tsx",
+  "./components/**/*.tsx",
   { eager: true },
 );
 
-const components = Object.values(globImports)
+const hydratedComponents = Object.values(globImports)
   .map((importer) => Object.fromEntries(Object.entries(importer)))
-  .reduce((acc, curr) => Object.assign(curr, acc), {});
+  .reduce((acc, curr) => Object.assign(curr, acc), {} as AllComponents);
 
-for (const [name, Component] of Object.entries(components)) {
+for (const [name, Component] of Object.entries(hydratedComponents)) {
   const element = document.querySelector(`[data-hydrate-name="${name}"]`);
   if (!element) {
     continue;
@@ -28,7 +31,7 @@ for (const [name, Component] of Object.entries(components)) {
     element.getAttribute("data-hydrate-props") ?? "{}",
   );
 
+  // @ts-expect-error TODO: map props properly
   hydrateRoot(element, createPortal(<Component {...props} />, element));
-
   element.removeAttribute("data-hydrate-props");
 }
