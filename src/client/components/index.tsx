@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import { hydrate } from "../hydrate";
 
 export * from "./Counter";
 export * from "./Thing";
@@ -6,31 +6,16 @@ export * from "./Hello";
 
 const globImports: Record<
   string,
-  Record<string, React.ComponentType>
+  Record<string, React.FC<unknown>>
 > = import.meta.glob("./**/*.tsx", { eager: true });
 
 const mergedObject = Object.values(globImports)
-  .map((importer) =>
-    Object.fromEntries(Object.entries(importer)),
-  ) /* add wrapping div with props etc. somewhere here */
+  .map((importer) => Object.fromEntries(Object.entries(importer)))
+  .map((obj) => {
+    const [[name, Component]] = Object.entries(obj);
+    const newComponent = hydrate(Component, name);
+    return Object.fromEntries([[name, newComponent]]);
+  })
   .reduce((acc, curr) => Object.assign(curr, acc), {});
 
 export default mergedObject;
-
-function hydrate<P extends PropsWithChildren>(
-  Component: React.FC<P>,
-  name: string,
-): React.FC<P> {
-  return (props) => {
-    const { children, ...hydrationProps } = props;
-
-    return (
-      <div
-        data-hydrate-props={JSON.stringify(hydrationProps)}
-        data-hydrate-name={name}
-      >
-        <Component {...props} />
-      </div>
-    );
-  };
-}

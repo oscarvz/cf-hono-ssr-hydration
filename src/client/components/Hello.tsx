@@ -6,10 +6,7 @@ type HelloProps = {
   name: string;
 };
 
-export const Hello = hydrate(function Hello({
-  children,
-  name,
-}: PropsWithChildren<HelloProps>) {
+export function Hello({ children, name }: PropsWithChildren<HelloProps>) {
   const ref = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -23,4 +20,4 @@ export const Hello = hydrate(function Hello({
       Hello {name} {children}
     </h1>
   );
-});
+}

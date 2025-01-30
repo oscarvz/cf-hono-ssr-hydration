@@ -77,13 +77,13 @@ web.use(
   ),
 );
 
-const Hello = components.Hello;
+const Hello = components.Counter;
 
 web.get("/", (c) =>
   c.render(
-    <Hello name="Pete">
-      <span>hihi</span>
-    </Hello>,
+    <div>
+      <Hello count={2} />
+    </div>,
   ),
 );
 
