@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { reactRenderer } from "@hono/react-renderer";
 import { Children, isValidElement, type ReactElement } from "react";
 
-import { Counter, Thing } from "./client/components";
+import components from "./client/components";
 import { AssetTags } from "./utils";
 
 const web = new Hono();
@@ -12,44 +12,44 @@ web.use(
   "*",
   reactRenderer(
     ({ children }) => {
-      const mapChildren = (children: ReactElement) =>
-        Children.toArray(children)
-          .filter(isValidElement)
-          .map((child) => {
-            const anonFn = child.type.toString(); /* wonky but fine in dev */
-            const cName = anonFn.match(/fileName: ".*\/(.*?)\.tsx"/)?.[1] ?? "";
+      // const mapChildren = (children: ReactElement) =>
+      //   Children.toArray(children)
+      //     .filter(isValidElement)
+      //     .map((child) => {
+      //       const anonFn = child.type.toString(); /* wonky but fine in dev */
+      //       const cName = anonFn.match(/fileName: ".*\/(.*?)\.tsx"/)?.[1] ?? "";
 
-            if (cName) {
-              console.log("hi got to the cName", cName);
+      //       if (cName) {
+      //         console.log("hi got to the cName", cName);
 
-              const props = JSON.stringify(child.props);
+      //         const props = JSON.stringify(child.props);
 
-              return [
-                <div
-                  style={{ display: "contents" }}
-                  key={cName}
-                  data-hydrate-name={cName}
-                  data-hydrate-props={props}
-                >
-                  {child}
-                </div>,
-              ];
-            }
+      //         return [
+      //           <div
+      //             style={{ display: "contents" }}
+      //             key={cName}
+      //             data-hydrate-name={cName}
+      //             data-hydrate-props={props}
+      //           >
+      //             {child}
+      //           </div>,
+      //         ];
+      //       }
 
-            if (
-              child.props &&
-              typeof child.props === "object" &&
-              "children" in child.props &&
-              typeof child.props.children !==
-                "string" /* NEEDS WORK, check if type is proper */
-            ) {
-              return mapChildren(child.props.children);
-            }
+      //       if (
+      //         child.props &&
+      //         typeof child.props === "object" &&
+      //         "children" in child.props &&
+      //         typeof child.props.children !==
+      //           "string" /* NEEDS WORK, check if type is proper */
+      //       ) {
+      //         return mapChildren(child.props.children);
+      //       }
 
-            return child;
-          });
+      //       return child;
+      //     });
 
-      const newChildren = mapChildren(children);
+      // const newChildren = mapChildren(children);
 
       return (
         <html lang="en">
@@ -66,25 +66,37 @@ web.use(
           </head>
 
           <body>
-            <div id="root">{newChildren}</div>
+            <div id="root">{children}</div>
           </body>
         </html>
       );
     },
-    { docType: true },
+    {
+      docType: true,
+    },
   ),
 );
 
+const Hello = components.Hello;
+
 web.get("/", (c) =>
   c.render(
-    <div>
-      <Thing />
-      <h1>
-        <p>hellllllo</p>
-      </h1>
-      <Counter score={1} />
-    </div>,
+    <Hello name="Pete">
+      <span>hihi</span>
+    </Hello>,
   ),
 );
+
+// web.get("/", (c) =>
+//   c.render(
+//     <div>
+//       <Thing />
+//       <h1>
+//         <p>hellllllo</p>
+//       </h1>
+//       <Counter score={1} />
+//     </div>,
+//   ),
+// );
 
 export default web;

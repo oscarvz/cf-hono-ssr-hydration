@@ -5,13 +5,23 @@ import { hydrateRoot, createRoot } from "react-dom/client";
 import * as components from "./components";
 import "./index.css";
 
+// const globImports = import.meta.glob("./components/**/*.tsx");
+// console.log("globImports", globImports);
+
+console.log(components);
+
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element not found");
 }
 
 Object.entries(components).map(([name, Component]) => {
-  const element = document.querySelector(`[data-hydrate-name="${name}"]`);
+  // console.log("name", name);
+  // const something = import.meta.resolve(`./components/${name}.tsx`);
+  // const something = import.meta.;
+  // console.log("something", something);
+
+  const element = document.querySelector(`[data-hydrate-id="${name}"]`);
   if (!element) {
     return null;
   }
@@ -20,6 +30,6 @@ Object.entries(components).map(([name, Component]) => {
     element.getAttribute("data-hydrate-props") ?? "{}",
   );
 
-  // @ts-expect-error - requires props mapping for different components
+  // @ts-expect-error
   hydrateRoot(element, createPortal(<Component {...props} />, element));
 });
