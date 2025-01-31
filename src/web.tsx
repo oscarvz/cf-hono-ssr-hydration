@@ -32,15 +32,24 @@ web.use(
   ),
 );
 
-web.get("/", (c) =>
-  c.render(
+web.get("/", (c) => {
+  // const db = c.get("db");
+  // fetch some of the doawgs and their amount of likes
+
+  const dogs = [
+    { imgSrc: "https://placedog.net/500", alt: "kitten" },
+    { imgSrc: "https://placedog.net/501", alt: "kitten" },
+  ];
+
+  return c.render(
     <Layout title={<Title>Shokaki</Title>}>
       <ImageGrid>
-        <ImageCard src="https://placedog.net/500" alt="kitten" />
-        <ImageCard src="https://placedog.net/501" alt="kitten" />
+        {dogs.map(({ alt, imgSrc }) => (
+          <ImageCard key={imgSrc} src={imgSrc} alt={alt} />
+        ))}
       </ImageGrid>
     </Layout>,
-  ),
-);
+  );
+});
 
 export default web;
