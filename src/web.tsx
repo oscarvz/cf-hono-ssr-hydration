@@ -1,9 +1,9 @@
-import { Hono } from "hono";
 import { reactRenderer } from "@hono/react-renderer";
-
+import { Hono } from "hono";
+import Components from "./client/hydrated";
 import { AssetTags } from "./utils";
-import { Components } from "./client/hydrated";
-const { Counter } = Components;
+
+const { Counter, Hello, Thing } = Components;
 
 const web = new Hono();
 
@@ -31,6 +31,14 @@ web.use(
   ),
 );
 
-web.get("/", (c) => c.render(<Counter score={6554} />));
+web.get("/", (c) =>
+  c.render(
+    <div>
+      <Thing />
+      <Hello name="cheese" />
+      <Counter score={6554} />
+    </div>,
+  ),
+);
 
 export default web;

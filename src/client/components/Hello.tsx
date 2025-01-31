@@ -1,7 +1,5 @@
 import { type PropsWithChildren, useEffect, useRef } from "react";
 
-import { hydrate } from "../hydrate";
-
 type HelloProps = {
   name: string;
 };

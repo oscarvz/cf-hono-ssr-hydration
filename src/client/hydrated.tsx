@@ -8,8 +8,7 @@ const globImports: Record<
   Record<string, React.FC<unknown>>
 > = import.meta.glob("./components/**/*.tsx", { eager: true });
 
-export const { ...Components } = Object.values(globImports)
-  .map((importer) => Object.fromEntries(Object.entries(importer)))
+export default Object.values(globImports)
   .map((obj) => {
     const [[name, Component]] = Object.entries(obj);
     const newComponent = hydrate(Component, name);
