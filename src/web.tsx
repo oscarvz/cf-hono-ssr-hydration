@@ -1,9 +1,10 @@
 import { reactRenderer } from "@hono/react-renderer";
 import { Hono } from "hono";
-import Components from "./client/hydrated";
+import { ImageGrid, Layout } from "./client/components";
+import { hydratedComponents } from "./client/components-hydrate";
 import { AssetTags } from "./utils";
 
-const { Counter, Hello, Thing } = Components;
+const { ImageCard, Title } = hydratedComponents;
 
 const web = new Hono();
 
@@ -15,7 +16,7 @@ web.use(
         <head>
           <meta charSet="utf-8" />
           <meta content="width=device-width, initial-scale=1" name="viewport" />
-          <title>Wow cf-workers-hono-client-side</title>
+          <title>turtles</title>
           <link rel="icon" href="/favicon.svg" />
           <AssetTags />
         </head>
@@ -33,11 +34,12 @@ web.use(
 
 web.get("/", (c) =>
   c.render(
-    <div>
-      <Thing />
-      <Hello name="cheese" />
-      <Counter score={6554} />
-    </div>,
+    <Layout title={<Title>Shokaki</Title>}>
+      <ImageGrid>
+        <ImageCard src="https://placedog.net/500" alt="kitten" />
+        <ImageCard src="https://placedog.net/501" alt="kitten" />
+      </ImageGrid>
+    </Layout>,
   ),
 );
 

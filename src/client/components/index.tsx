@@ -1,3 +1,4 @@
-export * from "./Counter";
-export * from "./Thing";
-export * from "./Hello";
+export * from "./ImageCard";
+export * from "./ImageGrid";
+export * from "./Layout";
+export * from "./Title";

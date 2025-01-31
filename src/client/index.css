@@ -6,6 +6,9 @@
 
 :root {
   color-scheme: light dark;
+
+  --spacing-inline: 2rem;
+  --spacing-block: 3rem;
 }
 
 html,
