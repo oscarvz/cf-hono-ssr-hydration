@@ -12,20 +12,6 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-const { totalLikes }: { totalLikes: number } = JSON.parse(
-  document.body.getAttribute("data-hydrate-state") ?? "0",
-);
-
-type State = {
-  totalLikes: number;
-  incrementLikes: () => void;
-};
-
-export const useBearStore = create<State>((set) => ({
-  totalLikes,
-  incrementLikes: () => set((state) => ({ totalLikes: state.totalLikes + 1 })),
-}));
-
 const globImports: Record<string, Record<string, React.FC>> = import.meta.glob(
   "./components/**/*.tsx",
   { eager: true },

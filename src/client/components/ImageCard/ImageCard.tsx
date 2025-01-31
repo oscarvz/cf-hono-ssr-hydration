@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./ImageCard.module.css";
-// import { useBearStore } from "../..";
+import { useBearStore } from "../useBearStore";
 
 type ImageCardProps = {
   alt: string;
@@ -10,11 +10,10 @@ type ImageCardProps = {
 
 export function ImageCard({ alt, likes, src }: ImageCardProps) {
   const [currentLikes, setCurrentLikes] = useState(likes);
-
-  // const increment = useBearStore((state) => state.incrementLikes);
+  const increment = useBearStore((state) => state.incrementLikes);
 
   const handleLike = () => {
-    // increment();
+    increment();
     setCurrentLikes((prev) => prev + 1);
   };
 
@@ -26,7 +25,7 @@ export function ImageCard({ alt, likes, src }: ImageCardProps) {
 
       <div className={styles.vote}>
         <button type="button" onClick={handleLike}>
-          🤍
+          {currentLikes > 0 ? "❤️" : "🩶"}
         </button>
         <span>{currentLikes}</span>
       </div>

@@ -8,16 +8,10 @@ const { ImageCard, Title, TotalLikes } = hydratedComponents;
 
 const web = new Hono();
 
-declare module "@hono/react-renderer" {
-  interface Props {
-    totalLikes: number;
-  }
-}
-
 web.use(
   "*",
   reactRenderer(
-    ({ children, totalLikes }) => (
+    ({ children }) => (
       <html lang="en">
         <head>
           <meta charSet="utf-8" />
@@ -27,7 +21,7 @@ web.use(
           <AssetTags />
         </head>
 
-        <body data-hydrate-state={JSON.stringify({ totalLikes })}>
+        <body>
           <div id="root">{children}</div>
         </body>
       </html>
@@ -43,8 +37,8 @@ web.get("/", (c) => {
   // fetch some of the doawgs and their amount of likes
 
   const dogs = [
-    { imgSrc: "https://placedog.net/500", alt: "kitten", likes: 10 },
-    { imgSrc: "https://placedog.net/501", alt: "kitten", likes: 6 },
+    { imgSrc: "https://placedog.net/500", alt: "kitten", likes: 0 },
+    { imgSrc: "https://placedog.net/501", alt: "kitten", likes: 0 },
   ];
 
   const totalLikes = dogs.reduce((acc, { likes }) => acc + likes, 0);
@@ -60,7 +54,6 @@ web.get("/", (c) => {
         ))}
       </ImageGrid>
     </Layout>,
-    { totalLikes },
   );
 });
 

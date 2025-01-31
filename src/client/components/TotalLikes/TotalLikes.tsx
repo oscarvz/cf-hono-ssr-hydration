@@ -1,18 +1,18 @@
-import { useEffect } from "react";
-// import { bearStore } from "../..";
+import { useEffect, useState } from "react";
+import { useBearStore } from "../useBearStore";
 
 type TotalLikesProps = {
   totalLikes: number;
 };
 
 export function TotalLikes({ totalLikes }: TotalLikesProps) {
-  // const totalLikes = useBearStore((state) => state.totalLikes);
+  const [likes, setLikes] = useState(totalLikes);
 
-  useEffect(() => {
-    // const something = bearStore.getState().totalLikes;
-    // console.log("total likes", something);
-    console.log("total likes");
-  }, []);
+  const stateLikes = useBearStore((state) => state.totalLikes);
+  const setTotalLikes = useBearStore((state) => state.setTotalLikes);
 
-  return <div>Total likes: {totalLikes}</div>;
+  useEffect(() => setTotalLikes(totalLikes), [setTotalLikes, totalLikes]);
+  useEffect(() => setLikes(stateLikes), [stateLikes]);
+
+  return <div>Total likes: {likes}</div>;
 }
