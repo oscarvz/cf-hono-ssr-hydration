@@ -4,7 +4,7 @@ import { ImageGrid, Layout } from "./client/components";
 import { hydratedComponents } from "./client/components-hydrate";
 import { AssetTags } from "./utils";
 
-const { ImageCard, Title } = hydratedComponents;
+const { ImageCard, Title, TotalLikes } = hydratedComponents;
 
 const web = new Hono();
 
@@ -50,7 +50,10 @@ web.get("/", (c) => {
   const totalLikes = dogs.reduce((acc, { likes }) => acc + likes, 0);
 
   return c.render(
-    <Layout title={<Title>Shokaki</Title>}>
+    <Layout
+      title={<Title>Shokaki</Title>}
+      nav={<TotalLikes totalLikes={totalLikes} />}
+    >
       <ImageGrid>
         {dogs.map(({ alt, imgSrc, likes }) => (
           <ImageCard key={imgSrc} src={imgSrc} alt={alt} likes={likes} />
