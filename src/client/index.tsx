@@ -1,11 +1,7 @@
-import type { ComponentProps } from "react";
 import { createPortal } from "react-dom";
 import { hydrateRoot } from "react-dom/client";
-import { create } from "zustand";
-import type * as components from "./components";
 import "./index.css";
-
-type AllComponents = typeof components;
+import "./hooks/useBearStore";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -19,18 +15,20 @@ const globImports: Record<string, Record<string, React.FC>> = import.meta.glob(
 
 const hydratedComponents = Object.values(globImports)
   .map((importer) => Object.fromEntries(Object.entries(importer)))
-  .reduce((acc, curr) => Object.assign(curr, acc), {} as AllComponents);
+  .reduce((acc, curr) => Object.assign(curr, acc), {});
 
 for (const [name, Component] of Object.entries(hydratedComponents)) {
   const elements = document.querySelectorAll(`[data-hydrate-name="${name}"]`);
 
-  for (const element of elements) {
-    const props: ComponentProps<typeof Component> = JSON.parse(
-      element.getAttribute("data-hydrate-props") ?? "{}",
+  for (const mountingElement of elements) {
+    const props = JSON.parse(
+      mountingElement.getAttribute("data-hydrate-props") ?? "{}",
     );
 
-    // @ts-expect-error TODO: map props properly
-    hydrateRoot(element, createPortal(<Component {...props} />, element));
-    element.removeAttribute("data-hydrate-props");
+    hydrateRoot(
+      mountingElement,
+      createPortal(<Component {...props} />, mountingElement),
+    );
+    mountingElement.removeAttribute("data-hydrate-props");
   }
 }

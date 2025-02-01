@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useBearStore } from "../../hooks";
 import styles from "./ImageCard.module.css";
-import { useBearStore } from "../useBearStore";
 
 type ImageCardProps = {
   alt: string;
