@@ -1,7 +1,6 @@
 import { createPortal } from "react-dom";
 import { hydrateRoot } from "react-dom/client";
 import "./index.css";
-import "./hooks/useBearStore";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {

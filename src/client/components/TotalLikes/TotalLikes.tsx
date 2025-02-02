@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useBearStore } from "../../hooks/useBearStore";
+import { useBearStore } from "../../hooks";
 
 type TotalLikesProps = {
   totalLikes: number;
