@@ -6,12 +6,9 @@ type TotalLikesProps = {
 };
 
 export function TotalLikes({ totalLikes }: TotalLikesProps) {
+  const stateLikes = useBearStore((state) => state.totalLikes);
   const [likes, setLikes] = useState(totalLikes);
 
-  const stateLikes = useBearStore((state) => state.totalLikes);
-  const setTotalLikes = useBearStore((state) => state.setTotalLikes);
-
-  useEffect(() => setTotalLikes(totalLikes), [setTotalLikes, totalLikes]);
   useEffect(() => setLikes(stateLikes), [stateLikes]);
 
   return <div>Total likes: {likes}</div>;

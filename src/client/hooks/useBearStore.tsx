@@ -15,15 +15,12 @@ export const useBearStore = create<State>((set) => {
     };
   }
 
-  const rootElement = document.getElementById("root");
-  if (!rootElement) {
-    throw new Error("Root element not found");
-  }
-
-  const initialStateData = rootElement.dataset.initialState;
-  const state: State = initialStateData
+  const initialStateData = document.body.dataset.initialState;
+  const state: Pick<State, "totalLikes"> = initialStateData
     ? JSON.parse(initialStateData)
     : { totalLikes: 0 };
+
+  document.body.removeAttribute("data-initial-state");
 
   return {
     totalLikes: state.totalLikes,
