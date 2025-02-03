@@ -13,15 +13,15 @@ export function Layout({ children, nav, title }: LayoutProps) {
         columns="auto 1fr auto"
         style={{ boxShadow: "0 1px var(--gray-a4)" }}
         align="center"
-        py="4"
         px="6"
+        height="4rem"
       >
         {title}
         <div />
         {nav}
       </Grid>
 
-      <Box p="4">
+      <Box px="6" py="4">
         <main>{children}</main>
       </Box>
     </Grid>
