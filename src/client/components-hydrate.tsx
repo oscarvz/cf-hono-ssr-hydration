@@ -11,8 +11,8 @@ const globImports: Record<
 export const { ...hydratedComponents } = Object.values(globImports)
   .map((obj) => {
     const [[name, Component]] = Object.entries(obj);
-    const newComponent = hydrate(Component, name);
-    return Object.fromEntries([[name, newComponent]]);
+    const wrappedComponent = hydrate(Component, name);
+    return Object.fromEntries([[name, wrappedComponent]]);
   })
   .reduce((acc, curr) => Object.assign(curr, acc), {} as Components);
 

@@ -1,4 +1,5 @@
 import { reactRenderer } from "@hono/react-renderer";
+import { Theme } from "@radix-ui/themes";
 import { Hono } from "hono";
 import { ImageGrid, Layout } from "./client/components";
 import { hydratedComponents } from "./client/components-hydrate";
@@ -10,14 +11,16 @@ const web = new Hono();
 
 declare module "@hono/react-renderer" {
   interface Props {
-    inistialState: { totalLikes: number };
+    initialState?: {
+      totalLikes?: number;
+    };
   }
 }
 
 web.use(
   "*",
   reactRenderer(
-    ({ children, inistialState }) => (
+    ({ children, initialState }) => (
       <html lang="en">
         <head>
           <meta charSet="utf-8" />
@@ -27,14 +30,19 @@ web.use(
           <AssetTags />
         </head>
 
-        <body data-initial-state={JSON.stringify(inistialState)}>
-          <div id="root">{children}</div>
+        <body data-initial-state={JSON.stringify(initialState)}>
+          <Theme
+            id="root"
+            appearance="dark"
+            accentColor="tomato"
+            radius="large"
+          >
+            {children}
+          </Theme>
         </body>
       </html>
     ),
-    {
-      docType: true,
-    },
+    { docType: true },
   ),
 );
 
@@ -48,6 +56,7 @@ web.get("/", (c) => {
   ];
 
   const totalLikes = dogs.reduce((acc, { likes }) => acc + likes, 0);
+  const state = { initialState: { totalLikes } };
 
   return c.render(
     <Layout
@@ -60,11 +69,7 @@ web.get("/", (c) => {
         ))}
       </ImageGrid>
     </Layout>,
-    {
-      inistialState: {
-        totalLikes,
-      },
-    },
+    state,
   );
 });
 

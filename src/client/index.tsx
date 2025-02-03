@@ -1,3 +1,4 @@
+import "@radix-ui/themes/styles.css";
 import { createPortal } from "react-dom";
 import { hydrateRoot } from "react-dom/client";
 import "./index.css";
