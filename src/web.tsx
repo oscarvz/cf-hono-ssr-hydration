@@ -31,12 +31,7 @@ web.use(
         </head>
 
         <body data-initial-state={JSON.stringify(initialState)}>
-          <Theme
-            id="root"
-            appearance="dark"
-            accentColor="tomato"
-            radius="large"
-          >
+          <Theme id="root" appearance="dark" accentColor="cyan" radius="large">
             {children}
           </Theme>
         </body>
