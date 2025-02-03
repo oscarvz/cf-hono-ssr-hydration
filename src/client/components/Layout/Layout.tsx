@@ -11,7 +11,7 @@ export function Layout({ children, nav, title }: LayoutProps) {
     <Grid rows="auto 100%" height="100%">
       <Grid
         columns="auto 1fr auto"
-        style={{ borderBottom: "1px solid limegreen" }}
+        style={{ boxShadow: "0 1px var(--gray-a4)" }}
         align="center"
         py="4"
         px="6"

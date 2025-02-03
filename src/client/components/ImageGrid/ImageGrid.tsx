@@ -1,5 +1,11 @@
-import styles from "./ImageGrid.module.css";
+import { Flex, Grid } from "@radix-ui/themes";
 
 export function ImageGrid({ children }: { children: React.ReactNode }) {
-  return <div className={styles.grid}>{children}</div>;
+  return (
+    <Flex align="center" justify="center">
+      <Grid columns={{ xs: "2" }} gap="4">
+        {children}
+      </Grid>
+    </Flex>
+  );
 }
