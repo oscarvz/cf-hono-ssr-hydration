@@ -1,6 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
-
-import styles from "./Layout.module.css";
+import { Box, Grid } from "@radix-ui/themes";
 
 type LayoutProps = PropsWithChildren<{
   title: ReactNode;
@@ -9,13 +8,22 @@ type LayoutProps = PropsWithChildren<{
 
 export function Layout({ children, nav, title }: LayoutProps) {
   return (
-    <div className={styles.grid}>
-      <header className={styles.header}>
+    <Grid rows="auto 100%" height="100%">
+      <Grid
+        columns="auto 1fr auto"
+        style={{ borderBottom: "1px solid limegreen" }}
+        align="center"
+        py="4"
+        px="6"
+      >
         {title}
+        <div />
         {nav}
-      </header>
+      </Grid>
 
-      <main className={styles.main}>{children}</main>
-    </div>
+      <Box p="4">
+        <main>{children}</main>
+      </Box>
+    </Grid>
   );
 }

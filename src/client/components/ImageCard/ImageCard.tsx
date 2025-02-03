@@ -1,6 +1,7 @@
+import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { Box, Card, Grid, IconButton, Inset, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import { useBearStore } from "../../hooks";
-import styles from "./ImageCard.module.css";
 
 type ImageCardProps = {
   alt: string;
@@ -18,17 +19,31 @@ export function ImageCard({ alt, likes, src }: ImageCardProps) {
   };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.imageContainer}>
-        <img src={src} alt={alt} />
-      </div>
+    <Box maxWidth="320px">
+      <Card size="1">
+        <Inset clip="padding-box" side="top" pb="current">
+          <img
+            src={src}
+            alt={alt}
+            style={{
+              display: "block",
+              objectFit: "cover",
+              width: "100%",
+              height: 240,
+              aspectRatio: "4 / 3",
+              backgroundColor: "var(--gray-5)",
+            }}
+          />
+        </Inset>
 
-      <div className={styles.vote}>
-        <button type="button" onClick={handleLike}>
-          {currentLikes > 0 ? "❤️" : "🩶"}
-        </button>
-        <span>{currentLikes}</span>
-      </div>
-    </div>
+        <Grid columns="auto 1fr" gap="2" p="0" align="center">
+          <IconButton size="1" variant="classic" onClick={handleLike}>
+            <HeartFilledIcon />
+          </IconButton>
+
+          <Text>{currentLikes}</Text>
+        </Grid>
+      </Card>
+    </Box>
   );
 }

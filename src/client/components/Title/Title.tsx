@@ -1,3 +1,4 @@
+import { Heading } from "@radix-ui/themes";
 import { useEffect, useRef, type PropsWithChildren } from "react";
 
 export function Title({ children }: PropsWithChildren) {
@@ -12,8 +13,8 @@ export function Title({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <h1>
+    <Heading as="h1" m="0">
       {children} <span ref={ref}>🔥🧡</span>
-    </h1>
+    </Heading>
   );
 }
