@@ -8,7 +8,7 @@ type BearState = State & {
   setTotalLikes: (totalLikes: number) => void;
 };
 
-let bearStoreInstance: UseBoundStore<StoreApi<BearState>>;
+let bearStoreInstance: UseBoundStore<StoreApi<BearState>> | undefined;
 function getBearStoreInstance(initialState: State) {
   if (!bearStoreInstance) {
     bearStoreInstance = create<BearState>((set) => ({
