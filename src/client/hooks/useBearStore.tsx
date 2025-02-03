@@ -1,31 +1,32 @@
-import { create } from "zustand/react";
+import { useContext, useMemo } from "react";
+import type { StoreApi } from "zustand";
+import { create, type UseBoundStore } from "zustand/react";
+import { StateContext, type State } from "../../context/StateContext";
 
-type State = {
-  totalLikes: number;
+type BearState = State & {
   incrementLikes: () => void;
   setTotalLikes: (totalLikes: number) => void;
 };
 
-export const useBearStore = create<State>((set) => {
-  if (typeof window === "undefined" || !document) {
-    return {
-      totalLikes: 0,
-      incrementLikes: () => {},
-      setTotalLikes: () => {},
-    };
+let bearStoreInstance: UseBoundStore<StoreApi<BearState>>;
+function getBearStoreInstance(initialState: State) {
+  if (!bearStoreInstance) {
+    bearStoreInstance = create<BearState>((set) => ({
+      ...initialState,
+      incrementLikes: () =>
+        set((state) => ({ totalLikes: state.totalLikes + 1 })),
+      setTotalLikes: (totalLikes) => set({ totalLikes }),
+    }));
   }
 
-  const initialStateData = document.body.dataset.initialState;
-  const state: Pick<State, "totalLikes"> = initialStateData
-    ? JSON.parse(initialStateData)
-    : { totalLikes: 0 };
+  return bearStoreInstance;
+}
 
-  document.body.removeAttribute("data-initial-state");
+type StateSelector<T> = (state: BearState) => T;
 
-  return {
-    totalLikes: state.totalLikes,
-    incrementLikes: () =>
-      set((state) => ({ totalLikes: state.totalLikes + 1 })),
-    setTotalLikes: (totalLikes: number) => set({ totalLikes }),
-  };
-});
+export function useBearStore<T>(args: StateSelector<T>) {
+  const state = useContext(StateContext);
+  const bearStore = useMemo(() => getBearStoreInstance(state), [state]);
+
+  return bearStore(args);
+}

@@ -1,10 +1,11 @@
 import { reactRenderer, useRequestContext } from "@hono/react-renderer";
 import { Theme } from "@radix-ui/themes";
 import { Hono } from "hono";
+import { getCookie } from "hono/cookie";
 import { ImageGrid, Layout } from "./client/components";
 import { hydratedComponents } from "./client/components-hydrate";
+import { isValidTheme, StateContext, type State } from "./context/StateContext";
 import { AssetTags } from "./utils";
-import { getCookie } from "hono/cookie";
 
 const { ImageCard, Title, TotalLikes } = hydratedComponents;
 
@@ -12,14 +13,8 @@ const web = new Hono();
 
 declare module "@hono/react-renderer" {
   interface Props {
-    initialState?: {
-      totalLikes?: number;
-    };
+    initialState: Pick<State, "totalLikes">;
   }
-}
-
-function isValidTheme(cookieString?: string): cookieString is "dark" | "light" {
-  return cookieString === "dark" || cookieString === "light";
 }
 
 web.use(
@@ -28,6 +23,8 @@ web.use(
     ({ children, initialState, c }) => {
       const cookieString = getCookie(c, "theme");
       const appearance = isValidTheme(cookieString) ? cookieString : "dark";
+
+      const state = { ...initialState, theme: appearance };
 
       return (
         <html lang="en">
@@ -42,14 +39,16 @@ web.use(
             <AssetTags />
           </head>
 
-          <body data-initial-state={JSON.stringify(initialState)}>
+          <body data-initial-state={JSON.stringify(state)}>
             <Theme
               id="root"
               appearance={appearance}
               accentColor="cyan"
               radius="large"
             >
-              {children}
+              <StateContext.Provider value={state}>
+                {children}
+              </StateContext.Provider>
             </Theme>
           </body>
         </html>
@@ -64,7 +63,7 @@ web.get("/", (c) => {
   // fetch some of the doawgs and their amount of likes
 
   const dogs = [
-    { imgSrc: "https://placedog.net/500", alt: "kitten", likes: 1 },
+    { imgSrc: "https://placedog.net/500", alt: "kitten", likes: 7 },
     { imgSrc: "https://placedog.net/501", alt: "kitten", likes: 8 },
   ];
 
@@ -72,10 +71,7 @@ web.get("/", (c) => {
   const state = { initialState: { totalLikes } };
 
   return c.render(
-    <Layout
-      title={<Title>Shokaki</Title>}
-      nav={<TotalLikes totalLikes={totalLikes} />}
-    >
+    <Layout title={<Title>Shokaki</Title>} nav={<TotalLikes />}>
       <ImageGrid>
         {dogs.map(({ alt, imgSrc, likes }) => (
           <ImageCard key={imgSrc} src={imgSrc} alt={alt} likes={likes} />
