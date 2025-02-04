@@ -1,4 +1,4 @@
-import { reactRenderer, useRequestContext } from "@hono/react-renderer";
+import { reactRenderer } from "@hono/react-renderer";
 import { Theme } from "@radix-ui/themes";
 import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
@@ -65,6 +65,8 @@ web.get("/", (c) => {
   const dogs = [
     { imgSrc: "https://placedog.net/500", alt: "kitten", likes: 7 },
     { imgSrc: "https://placedog.net/501", alt: "kitten", likes: 8 },
+    { imgSrc: "https://placedog.net/502", alt: "kitten", likes: 12 },
+    { imgSrc: "https://placedog.net/503", alt: "kitten", likes: 3 },
   ];
 
   const totalLikes = dogs.reduce((acc, { likes }) => acc + likes, 0);

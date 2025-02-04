@@ -19,8 +19,8 @@ export const { ...hydratedComponents } = Object.values(globImports)
 function hydrate<P extends PropsWithChildren>(
   Component: React.FC<P>,
   name: string,
-): React.FC<P> {
-  return (props) => (
+) {
+  return (props: P) => (
     <div data-hydrate-name={name} data-hydrate-props={JSON.stringify(props)}>
       <Component {...props} />
     </div>

@@ -1,5 +1,5 @@
 import { Badge } from "@radix-ui/themes";
-import { useBearStore } from "../../hooks";
+import { useBearStore } from "../../../hooks";
 
 export function TotalLikes() {
   const likes = useBearStore((state) => state.totalLikes);

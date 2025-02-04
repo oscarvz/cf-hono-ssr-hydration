@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import type { StoreApi } from "zustand";
-import { create, type UseBoundStore } from "zustand/react";
-import { StateContext, type State } from "../../context/StateContext";
+import { type UseBoundStore, create } from "zustand/react";
+import { type State, StateContext } from "../context";
 
 type BearState = State & {
   incrementLikes: () => void;

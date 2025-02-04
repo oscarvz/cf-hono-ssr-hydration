@@ -1,7 +1,7 @@
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { Box, Card, Grid, IconButton, Inset, Text } from "@radix-ui/themes";
 import { useState } from "react";
-import { useBearStore } from "../../hooks";
+import { useBearStore } from "../../../hooks";
 
 type ImageCardProps = {
   alt: string;
