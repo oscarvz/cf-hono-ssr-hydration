@@ -22,6 +22,8 @@ function getInitialState(): State {
     ? JSON.parse(initialStateData)
     : initialState;
 
+  document.body.removeAttribute("data-initial-state");
+
   return initial;
 }
 
