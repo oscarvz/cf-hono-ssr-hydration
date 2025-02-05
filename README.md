@@ -9,7 +9,7 @@ started with a more full-stack approach can be a bit tricky.
 with a bunch of caveats, there are some nice React Router options[^1] that come
 with a buttload of setup, boilerplate and opinionated APIs...
 
-[^1]: https://github.com/yusukebe/hono-react-router-adapter
+[^1]: https://github.com/yusukebe/hono-react-router-adapter  
   https://github.com/rphlmr/react-router-hono-server
 
 ### The name
