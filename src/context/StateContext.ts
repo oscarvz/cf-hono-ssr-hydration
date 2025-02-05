@@ -2,14 +2,17 @@ import { createContext } from "react";
 
 export type State = {
   totalLikes: number;
-  theme: "dark" | "light";
 };
 
 const initialState: State = {
   totalLikes: 0,
-  theme: "dark",
 };
 
+/**
+ * Context that is responsible for passing down global state props to the
+ * Zustand store. When loaded on the client, it'll read the initial state from
+ * the `data-initial-state` attribute on the body tag.
+ */
 export const StateContext = createContext<State>(getInitialState());
 
 function getInitialState(): State {
@@ -18,15 +21,10 @@ function getInitialState(): State {
   }
 
   const initialStateData = document.body.dataset.initialState;
-  const initial: State = initialStateData
-    ? JSON.parse(initialStateData)
-    : initialState;
+  if (!initialStateData) {
+    return initialState;
+  }
 
   document.body.removeAttribute("data-initial-state");
-
-  return initial;
-}
-
-export function isValidTheme(string?: string): string is State["theme"] {
-  return string === "dark" || string === "light";
+  return JSON.parse(initialStateData);
 }

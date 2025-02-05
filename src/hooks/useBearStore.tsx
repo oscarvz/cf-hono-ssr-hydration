@@ -3,6 +3,7 @@ import type { StoreApi } from "zustand";
 import { type UseBoundStore, create } from "zustand/react";
 import { type State, StateContext } from "../context";
 
+// This needs work as it's absolultely not scalable
 type BearState = State & {
   incrementLikes: () => void;
   setTotalLikes: (totalLikes: number) => void;
